@@ -69,3 +69,24 @@ To run this application, ensure you have Python 3.x installed on your machine. Y
    git clone https://github.com/Bornface-Sonye/Gate-Pass-System.git
    cd C:\Users\ADMIN\Desktop\GPS
    move to the project folder and run the command: python main.py to interact with the application
+
+
+   ### Running the django project
+
+1. **Clone or Download the Repository**:
+   Clone the repository or download the project folder to your local machine.
+
+   ```bash
+   git clone https://github.com/Bornface-Sonye/Gate-Pass-System.git
+   cd C:\Users\ADMIN\Desktop\GPS\gps
+   move to the project folder and run the command: python manage.py makemigrations
+   move to the project folder and run the command: python manage.py migrate
+
+ 2. **Running the application**:
+   
+   ```bash
+   move to the project folder and run the command: python manage.py runserver
+   move to browser and paste the url generated on the cmd;-http://127.0.0.1:8000/admin for super user: super user details;- username: BORNFACE, Password: Gps@2024
+                                                          http://127.0.0.1:8000/login for admin user, admin details;- Username: dennisooko@gmail.com, Password: 12345678
+                                                          http://127.0.0.1:8000/user/login for normal user, normal user details;- Username: bornfacesonye@gmail.com, Password: 12345678
+
