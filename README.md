@@ -60,7 +60,7 @@ To run this application, ensure you have Python 3.x installed on your machine. Y
 - **qrcode**: For generating QR codes for laptops.
 - **SQLite3**: For local database management.
 
-### Setting Up
+### Setting Up and Running the PQT5 Application(Prototype)
 
 1. **Clone or Download the Repository**:
    Clone the repository or download the project folder to your local machine.
