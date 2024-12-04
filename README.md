@@ -67,7 +67,7 @@ To run this application, ensure you have Python 3.x installed on your machine. Y
 
    ```bash
    git clone https://github.com/Bornface-Sonye/Gate-Pass-System.git
-   cd C:\Users\ADMIN\Desktop\GPS
+   cd C:\Users\ADMIN\Desktop\GPS\PROTOTYPE
    move to the project folder and run the command: python main.py to interact with the application
 
 ### Running the django project
