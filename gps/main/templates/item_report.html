@@ -1,0 +1,140 @@
+{% extends 'base_dashboard.html' %}
+
+{% block content %}
+<style>
+    /* Sidebar styling */
+    .sidebar-card {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+
+    .stat-item {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    /* Main content styling */
+    .card-header {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .card-footer {
+        background-color: #f8f9fa;
+        font-size: 0.9rem;
+    }
+
+    .list-group-item {
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .container {
+        max-width: 900px;
+        margin-top: 20px;
+    }
+
+    .form-container {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .btn-search {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 1rem;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .btn-search:hover {
+        background-color: #218838;
+    }
+
+    .btn-download {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 1rem;
+        cursor: pointer;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .btn-download:hover {
+        background-color: #0056b3;
+    }
+
+    .error-message {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    <h1>Item Report</h1>
+    
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+    </div>
+
+    {% if details %}
+        <h2>{{ item }} Details</h2>
+        <table>
+            {% for key, value in details.items %}
+                <tr>
+                    <th>{{ key.replace('_', ' ').capitalize() }}</th>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <a href="{% url 'generate-pdf' details.unique_code %}" class="btn-download">Download as PDF</a>
+    {% endif %}
+    
+    {% for message in messages %}
+        <p class="error-message">{{ message }}</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

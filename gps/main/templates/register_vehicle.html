@@ -1,0 +1,115 @@
+{% extends 'base_dashboard.html' %}
+
+{% block content %}
+<style>
+    /* Container styling */
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+    }
+
+    h2 {
+        font-size: 28px;
+        font-weight: bold;
+        color: #343a40;
+        margin-bottom: 20px;
+        text-align: center;
+        font-family: 'Verdana', sans-serif;
+    }
+
+    /* Dynamic Message Styling */
+    .alert {
+        font-size: 16px;
+        padding: 10px 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        text-align: center;
+        font-family: 'Georgia', serif;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+    }
+
+    /* Form input styling */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        font-size: 16px;
+        font-family: 'Courier New', monospace;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #80bdff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    /* Button styling */
+    .btn-primary {
+        display: block;
+        width: 100%;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        font-family: 'Arial', sans-serif;
+        text-align: center;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary:focus {
+        outline: none;
+        background-color: #004085;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+</style>
+
+<div class="container">
+    <h2>Register Vehicle</h2>
+
+    <!-- Dynamic Message Display -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Vehicle Registration Form -->
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Register Vehicle</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'user_base_dashboard.html' %}
+
+{% block content %}
+<style>
+    /* Sidebar styling */
+    .sidebar-card {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+
+    .stat-item {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    /* Main content styling */
+    h1 {
+        text-align: center;
+        font-family: Arial, sans-serif;
+        color: #343a40;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 1rem;
+        font-family: 'Courier New', Courier, monospace;
+        text-align: center;
+    }
+
+    .card-header {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        padding: 10px;
+        font-family: Verdana, sans-serif;
+    }
+
+    .card-footer {
+        background-color: #f8f9fa;
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 10px;
+        font-family: 'Times New Roman', Times, serif;
+    }
+
+    .list-group-item {
+        border-radius: 5px;
+        margin-bottom: 10px;
+        padding: 10px;
+        font-family: Georgia, serif;
+        background-color: #e9ecef;
+        color: #343a40;
+    }
+
+    form {
+        width: 50%;
+        margin: 20px auto;
+        background-color: #f1f1f1;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 15px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+        margin: 10px auto;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+</style>
+<div>
+    <h1>Set Item PIN</h1>
+    {% for message in messages %}
+        <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-weight: bold;">
+            {{ message }}
+        </p>
+    {% endfor %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Set PIN</button>
+    </form>
+</div>
+{% endblock %}

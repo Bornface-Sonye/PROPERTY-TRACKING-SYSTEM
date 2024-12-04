@@ -1,0 +1,182 @@
+{% extends 'base_dashboard.html' %}
+
+{% block content %}
+<style>
+    /* Sidebar styling */
+    .sidebar-card {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+
+    .stat-item {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    /* Main content styling */
+    .card-header {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .card-footer {
+        background-color: #f8f9fa;
+        font-size: 0.9rem;
+    }
+
+    .list-group-item {
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    /* Content styling */
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 32px;
+        font-weight: bold;
+        color: #343a40;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Form Styling */
+    form {
+        margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    input:focus,
+    select:focus {
+        border-color: #80bdff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    /* Button Styling */
+    button[type="submit"] {
+        display: block;
+        width: 100%;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    button[type="submit"]:focus {
+        outline: none;
+        background-color: #004085;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    /* List Styling */
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .log-section {
+        margin-bottom: 20px;
+    }
+
+    .log-section h3 {
+        font-size: 1.2rem;
+        color: #343a40;
+    }
+
+    /* No log found styling */
+    .no-logs {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+</style>
+
+<div class="container">
+    <h1>Item Log Search</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="search">Search</button>
+    </form>
+
+    {% if entry_logs or exit_logs %}
+        <h2>Log Details for Unique Code: {{ unique_code }}</h2>
+
+        {% if entry_logs %}
+            <div class="log-section">
+                <h3>Entry Logs:</h3>
+                <ul>
+                    {% for log in entry_logs %}
+                        <li>{{ log.timestamp }} - {{ log.item_type }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="no-logs">No entry logs found.</p>
+        {% endif %}
+
+        {% if exit_logs %}
+            <div class="log-section">
+                <h3>Exit Logs:</h3>
+                <ul>
+                    {% for log in exit_logs %}
+                        <li>{{ log.timestamp }} - {{ log.item_type }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="no-logs">No exit logs found.</p>
+        {% endif %}
+
+        <form method="post" style="margin-top: 20px;">
+            {% csrf_token %}
+            <input type="hidden" name="unique_code" value="{{ unique_code }}">
+            <button type="submit" name="download_pdf">Download as PDF</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

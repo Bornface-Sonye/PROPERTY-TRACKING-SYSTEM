@@ -1,0 +1,14 @@
+Device name	DESKTOP-QAKTNT1
+Processor	Intel(R) Celeron(R) CPU  N3060  @ 1.60GHz   1.60 GHz
+Installed RAM	4.00 GB
+Device ID	F2C6B4E2-B820-467D-9942-E9527CD9AF05
+Product ID	00330-80000-00000-AA463
+System type	64-bit operating system, x64-based processor
+Pen and touch	No pen or touch input is available for this display
+
+
+Edition	Windows 10 Pro
+Version	22H2
+Installed on	‎07/‎06/‎2023
+OS build	19045.3693
+Experience	Windows Feature Experience Pack 1000.19053.1000.0

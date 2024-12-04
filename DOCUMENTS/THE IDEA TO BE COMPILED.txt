@@ -1,0 +1,46 @@
+Now implement the idea below using the same implementation used to build ATM;
+
+I want to come up with a gate pass system that would be used to track members with belongings such as electronic devices such as laptop and other properties including 
+cars, i want it that when a member with such property is getting in the system notes and when he or she is getting out he has to provide unique password that secure 
+the property, this password must be saved in the system; note that each password is tied to property unique number eg numberplate in case of a car, in case of 
+electronic gadget like laptop, i want to uniquely identify them without having to powering on the gadget;
+
+Please help me how i can accomplish this:
+Give the best programming language
+The best system structure
+Note this is a system that need to be portable, and should be easy to use since it would be used by security officers;
+
+The project main idea is to eliminate paper work of recording vehicles and pass sheets for electronic gadgets such as laptop;
+
+How do you add this qr code  on a laptop surface such that it cannot be removed or it can last
+
+Device Integration:
+Use QR codes or RFID for unique property identification without powering devices.
+QR codes can be scanned using a smartphone, while RFID readers provide non-contact identification for vehicles or electronic gadgets.
+
+Whic is the best method for adding qr code which is cheap and effective and readily available in local markets such as local towns in kenya and how i can get it;
+
+What if you need to buy the tool for adding qr code so you can use it in your institution, how can i get it and please assume i want to generate a unique qr code for 
+each laptop like i provide the laptop serial number and macc address, then the user enter his or her password; then the system generates qr code and pass it to the 
+tool that will print it on the laptop surface, now when the member will be proceeding out, the security officer will use the system to scan the qr code, then the user 
+will enter the password, then if qr code exist in the system and password is correct, 
+then the system provides success message and provide error message if the password is incorrect or the qr code does not exist in the system
+
+
+
+
+Now, i do not want to use a qr code for laptop, i just want the system to work like this;
+
+First the any member who would be entering in the institution with property such as laptop,
+ he or she first go to the registration office and we capture these details ( mac address, serial number, owner national id number, owner full name, owner email address); then the system request the owner to enter his or her password to secure the item; the system then generates a unique code which is a mixture of 5 uppercase letters and 5 numbers, then we find away of marking the respective laptop with this unique code, the system then stores this unique code together with the respective password; note that we would have table for laptop details: serial number[p.k], mac address, model, unique code(generated), Owner details: national id number, first name, last name, email address, unique code[f.k from laptop details table], Table 3; item_unique_code(f.k), pasword 
+Table 4; item_unique_code(f.k), day_in(date.now), time_in(time.now), day_out(date.now), 
+time_out(time.now)(each time you get in, this table will be updated, to insert day_in and time in, ,,,  
+         it then wait to match the day_out, and time_out)
+
+So note that each time the laptop get in the institution is recorded, when it is getting out then the  laptop is authenticated(security officer enter the unique code attached on the laptop surface, the system process, if the unique code does not exist then error message is shown, if the unique code exist then the owner is allowed to enter the password securing the item; if the password is correct then the exit table is updated then success message is shown to show the owner to exit)
+
+Note the system  should have an interface for the security officer at the gate to authenticate items, the system should provide admin interface for adding items and for tracking items in the database with their entries and exits;
+
+Note that there are 3 gates in the institution and all these systems should be synchronized, they should also be synchronized with the admin system
+
+For the car or vehicle; we go through the above processes but for a car we record owner national id number, full names, number plate number, the password; now instead of unique code being generated for a car, we simply use the number plate; note the process is the same to the one for the laptop above;

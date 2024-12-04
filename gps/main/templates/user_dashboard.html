@@ -1,0 +1,163 @@
+{% extends 'user_base_dashboard.html' %}
+
+{% block content %}
+<style>
+    /* Sidebar styling */
+    .sidebar-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+    }
+
+    .sidebar-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+
+    .stat-item {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    /* Main content styling */
+    .card-header {
+        background-color: #343a40;
+        color: white;
+        border-bottom: 1px solid #ddd;
+        padding: 15px;
+        font-size: 1.25rem;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-footer {
+        background-color: #f8f9fa;
+        font-size: 0.9rem;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        color: #777;
+    }
+
+    .list-group-item {
+        border-radius: 5px;
+        margin-bottom: 10px;
+        padding: 12px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        font-weight: 500;
+    }
+
+    .list-group-item:hover {
+        background-color: #e9ecef;
+        cursor: pointer;
+    }
+
+    .container-fluid {
+        margin-top: 30px;
+    }
+
+    .row {
+        margin-bottom: 20px;
+    }
+
+    .col-lg-3, .col-lg-9 {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    h3.card-title {
+        font-weight: bold;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 767px) {
+        .card-header {
+            font-size: 1.1rem;
+        }
+
+        .sidebar-header {
+            font-size: 1rem;
+        }
+
+        .stat-item {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <!-- Sidebar Card 1 -->
+            <div class="sidebar-card">
+                <div class="sidebar-header">
+                    <p class="stat-item">Administrator: {{ admin_name }}</p>
+                </div>
+            </div>
+            <!-- Sidebar Card 2 -->
+            <div class="sidebar-card">
+                <div class="sidebar-header">
+                    Welcome Back !!!
+                </div>
+                <div class="sidebar-header">
+                    Welcome, {{ last_name }}
+                </div>
+                <p class="stat-item">Total Laptops: {{ laptops_total }}</p>
+                <p class="stat-item">Total Vehicles: {{ vehicle_total }}</p>
+                <p class="stat-item">Total Entries: {{ entries }}</p>
+                <p class="stat-item">Total Exits: {{ exits }}</p>
+            </div>
+        </div>
+
+        <!-- Main content area -->
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">System User Dashboard</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Laptop Details Section -->
+                        <div class="col-md-6">
+                            <h5>Laptop Details</h5>
+                            <ul class="list-group">
+                                {% for laptop in laptops %}
+                                    <li class="list-group-item">{{ laptop.serial_number }}</li>
+                                {% empty %}
+                                    <li class="list-group-item">No laptops registered.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- Vehicle Details Section -->
+                        <div class="col-md-6">
+                            <h5>Vehicle Details</h5>
+                            <ul class="list-group">
+                                {% for vehicle in vehicles %}
+                                    <li class="list-group-item">{{ vehicle.number_plate }}</li>
+                                {% empty %}
+                                    <li class="list-group-item">No vehicles registered.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    Powered by Azdak's Software Solution
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
