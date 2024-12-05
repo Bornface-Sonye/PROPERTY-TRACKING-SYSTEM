@@ -2,6 +2,8 @@ from django import forms
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib.auth import logout  # Import the logout function
+
 from django.views.generic import UpdateView, DeleteView, ListView, TemplateView, FormView
 from django.shortcuts import get_object_or_404
 
