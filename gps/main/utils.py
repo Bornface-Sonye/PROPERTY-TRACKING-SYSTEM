@@ -1,5 +1,5 @@
 from .models import (
-    Owner, Laptop, Vehicle, Item, EntryLog, ExitLog, Authorised_User, System_User
+    Owner, Laptop, Vehicle, Item, EntryLog, ExitLog, Authorised_User, System_User, PasswordResetToken
 )
 
 import string

@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     SignUpView, LoginView, User_SignUpView, User_LoginView, LogoutView, DashboardView, User_DashboardView,
     Register_LaptopView, Register_VehicleView, SetItemPinView, ModifyPinView, ValidateItemEntryView, 
-    AuthenticateItemExitView, ItemReportView, GeneratePDFView, LogSearchView
+    AuthenticateItemExitView, ItemReportView, GeneratePDFView, LogSearchView, ResetPasswordView, ResetPasswordConfirmView
 )
                    
 
@@ -31,5 +31,8 @@ urlpatterns = [
     path("generate-pdf/<str:unique_code>/", GeneratePDFView.as_view(), name="generate-pdf"),
     
     path('log/', LogSearchView.as_view(), name='log-search'),
+    
+    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
+    path('reset-password/<str:token>/', ResetPasswordConfirmView.as_view(), name='reset-password-confirm'),
     
 ]

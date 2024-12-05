@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import (
-    Owner, Laptop, Vehicle, Item, EntryLog, ExitLog, Authorised_User, System_User
+    Owner, Laptop, Vehicle, Item, EntryLog, ExitLog, Authorised_User, System_User, PasswordResetToken
 )
 
 models_to_register = [
-Owner, Laptop, Vehicle, Item, EntryLog, ExitLog, Authorised_User, System_User
+Owner, Laptop, Vehicle, Item, EntryLog, ExitLog, Authorised_User, System_User, PasswordResetToken
     
 ]
 
