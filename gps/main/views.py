@@ -17,7 +17,6 @@ from .utils import generate_pdf
 from .utils import generate_item_pdf
 from django.http import HttpResponse
 
-
 from .utils import *
 from .models import (
     Owner, Laptop, Vehicle, Item, EntryLog, ExitLog, Authorised_User, System_User, PasswordResetToken

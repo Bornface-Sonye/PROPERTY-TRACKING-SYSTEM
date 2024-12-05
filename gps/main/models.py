@@ -4,7 +4,7 @@ from django.utils.timezone import now
 
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from .validators import validate_kenyan_id  # Assuming you have this custom validator
 
 
