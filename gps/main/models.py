@@ -63,18 +63,15 @@ class Item(models.Model):
 class EntryLog(models.Model):
     unique_code = models.CharField(max_length=50, help_text="Enter Item Code")
     timestamp = models.DateTimeField(auto_now_add=True)
-    item_type = models.CharField(max_length=10, choices=[('Laptop', 'Laptop'), ('Vehicle', 'Vehicle'), ('Other', 'Other')])
 
     def __str__(self):
-        return f"{self.item_type} - {self.unique_code}"
+        return f"{self.timestamp} - {self.unique_code}"
 
 class ExitLog(models.Model):
     unique_code = models.CharField(max_length=50, help_text="Enter Item Code")
     timestamp = models.DateTimeField(auto_now_add=True)
-    item_type = models.CharField(max_length=10, choices=[('Laptop', 'Laptop'), ('Vehicle', 'Vehicle'), ('Other', 'Other')])
-
     def __str__(self):
-        return f"{self.item_type} - {self.unique_code}"
+        return f"{self.timestamp} - {self.unique_code}"
     
 class System_User(models.Model):
     username = models.EmailField(unique=True, max_length=50, help_text="Enter a valid Username")

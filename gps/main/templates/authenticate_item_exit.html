@@ -1,36 +1,3 @@
-<!--
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Authenticate Item Exit</title>
-</head>
-<body>
-    <h1>Authenticate Item Exit</h1>
-    {% for message in messages %}
-        <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %};">
-            {{ message }}
-        </p>
-    {% endfor %}
-
-    {% if form %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Proceed</button>
-    </form>
-    {% elif pin_form %}
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="unique_code" value="{{ unique_code }}">
-        {{ pin_form.as_p }}
-        <button type="submit">Verify PIN</button>
-    </form>
-    {% endif %}
-</body>
-</html>
-
--->
-
 {% extends 'base_dashboard.html' %}
 
 {% block content %}

@@ -151,7 +151,7 @@
                 <h3>Entry Logs:</h3>
                 <ul>
                     {% for log in entry_logs %}
-                        <li>{{ log.timestamp }} - {{ log.item_type }}</li>
+                        <li>{{ log.timestamp }}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -164,7 +164,7 @@
                 <h3>Exit Logs:</h3>
                 <ul>
                     {% for log in exit_logs %}
-                        <li>{{ log.timestamp }} - {{ log.item_type }}</li>
+                        <li>{{ log.timestamp }}</li>
                     {% endfor %}
                 </ul>
             </div>

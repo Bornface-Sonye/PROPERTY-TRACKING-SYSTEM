@@ -311,7 +311,7 @@ class Register_LaptopView(View):
 
         
 class Register_VehicleView(View):
-    template_name = 'register_laptop.html'
+    template_name = 'register_vehicle.html'
 
     def get(self, request):
         form = LaptopOwnerForm()
@@ -421,10 +421,9 @@ class ValidateItemEntryView(View):
                 # Log the entry
                 EntryLog.objects.create(
                     unique_code=unique_code,
-                    item_type='Other'  # Replace with dynamic item type if needed
                 )
                 messages.success(request, "Entry logged successfully.")
-                return redirect('validate_item_entry')  # Redirect to the same page or another
+                return redirect('validate-item-entry')  # Redirect to the same page or another
 
         return render(request, self.template_name, {'form': form})
 
@@ -462,10 +461,9 @@ class AuthenticateItemExitView(View):
                     # Log the exit
                     ExitLog.objects.create(
                         unique_code=unique_code,
-                        item_type='Other'  # Replace with dynamic type if needed
                     )
                     messages.success(request, "Exit logged successfully.")
-                    return redirect('authenticate_item_exit')
+                    return redirect('authenticate-item-exit')
                 else:
                     messages.error(request, "Incorrect PIN. Please try again.")
             else:
@@ -523,8 +521,13 @@ class ModifyPinView(View):
         # Render the form with success or error messages
         return render(request, self.template_name, {'form': form})
 
+
 class ItemReportView(View):
     template_name = "item_report.html"
+
+    def format_key(self, key):
+        """Helper function to format the dictionary keys."""
+        return key.replace('_', ' ').capitalize()
 
     def get(self, request):
         form = ItemSearchForm()
@@ -539,19 +542,24 @@ class ItemReportView(View):
             laptop = Laptop.objects.filter(unique_code=unique_code).first()
             if laptop:
                 owner = Owner.objects.filter(national_id_no=laptop.national_id_no).first()
+                details = {
+                    "unique_code": laptop.unique_code,
+                    "serial_number": laptop.serial_number,
+                    "mac_address": laptop.mac_address,
+                    "model": laptop.model,
+                    "owner_national_id": owner.national_id_no,
+                    "owner_name": f"{owner.first_name} {owner.last_name}",
+                    "owner_phone": owner.phone_number,
+                    "owner_email": owner.email_address,
+                }
+                
+                # Format the keys in the details dictionary
+                formatted_details = {self.format_key(key): value for key, value in details.items()}
+                
                 context = {
                     "form": form,
                     "item": "Laptop",
-                    "details": {
-                        "unique_code": laptop.unique_code,
-                        "serial_number": laptop.serial_number,
-                        "mac_address": laptop.mac_address,
-                        "model": laptop.model,
-                        "owner_national_id": owner.national_id_no,
-                        "owner_name": f"{owner.first_name} {owner.last_name}",
-                        "owner_phone": owner.phone_number,
-                        "owner_email": owner.email_address,
-                    },
+                    "details": formatted_details,
                 }
                 return render(request, self.template_name, context)
             
@@ -559,63 +567,30 @@ class ItemReportView(View):
             vehicle = Vehicle.objects.filter(unique_code=unique_code).first()
             if vehicle:
                 owner = Owner.objects.filter(national_id_no=vehicle.national_id_no).first()
+                details = {
+                    "unique_code": vehicle.unique_code,
+                    "number_plate": vehicle.number_plate,
+                    "model": vehicle.model,
+                    "owner_national_id": owner.national_id_no,
+                    "owner_name": f"{owner.first_name} {owner.last_name}",
+                    "owner_phone": owner.phone_number,
+                    "owner_email": owner.email_address,
+                }
+                
+                # Format the keys in the details dictionary
+                formatted_details = {self.format_key(key): value for key, value in details.items()}
+                
                 context = {
                     "form": form,
                     "item": "Vehicle",
-                    "details": {
-                        "unique_code": vehicle.unique_code,
-                        "number_plate": vehicle.number_plate,
-                        "model": vehicle.model,
-                        "owner_national_id": owner.national_id_no,
-                        "owner_name": f"{owner.first_name} {owner.last_name}",
-                        "owner_phone": owner.phone_number,
-                        "owner_email": owner.email_address,
-                    },
+                    "details": formatted_details,
                 }
                 return render(request, self.template_name, context)
             
             # If no match found
             messages.error(request, "No item found with the provided unique code.")
+        
         return render(request, self.template_name, {"form": form})
-
-class GeneratePDFView(View):
-    def get(self, request, unique_code):
-        # Check for Laptop
-        laptop = Laptop.objects.filter(unique_code=unique_code).first()
-        if laptop:
-            owner = Owner.objects.get(national_id_no=laptop.national_id_no)
-            details = {
-                "item": "Laptop",
-                "unique_code": laptop.unique_code,
-                "serial_number": laptop.serial_number,
-                "mac_address": laptop.mac_address,
-                "model": laptop.model,
-                "owner_name": f"{owner.first_name} {owner.last_name}",
-                "owner_national_id": owner.national_id_no,
-                "owner_phone": owner.phone_number,
-                "owner_email": owner.email_address,
-            }
-            pdf_filename = f"{owner.first_name}_{owner.last_name}_Laptop.pdf"
-            return generate_item_pdf(details, pdf_filename)
-
-        # Check for Vehicle
-        vehicle = Vehicle.objects.filter(unique_code=unique_code).first()
-        if vehicle:
-            owner = Owner.objects.get(national_id_no=vehicle.national_id_no)
-            details = {
-                "item": "Vehicle",
-                "unique_code": vehicle.unique_code,
-                "number_plate": vehicle.number_plate,
-                "model": vehicle.model,
-                "owner_name": f"{owner.first_name} {owner.last_name}",
-                "owner_national_id": owner.national_id_no,
-                "owner_phone": owner.phone_number,
-                "owner_email": owner.email_address,
-            }
-            pdf_filename = f"{owner.first_name}_{owner.last_name}_Vehicle.pdf"
-            return generate_item_pdf(details, pdf_filename)
-
-        return HttpResponse("No item found", status=404)
 
 class LogSearchView(View):
     template_name = 'log_search.html'

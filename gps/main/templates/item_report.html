@@ -87,21 +87,6 @@
         background-color: #218838;
     }
 
-    .btn-download {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        font-size: 1rem;
-        cursor: pointer;
-        border-radius: 5px;
-        text-decoration: none;
-    }
-
-    .btn-download:hover {
-        background-color: #0056b3;
-    }
-
     .error-message {
         color: red;
         font-weight: bold;
@@ -124,12 +109,11 @@
         <table>
             {% for key, value in details.items %}
                 <tr>
-                    <th>{{ key.replace('_', ' ').capitalize() }}</th>
+                    <th>{{ key }}</th>
                     <td>{{ value }}</td>
                 </tr>
             {% endfor %}
         </table>
-        <a href="{% url 'generate-pdf' details.unique_code %}" class="btn-download">Download as PDF</a>
     {% endif %}
     
     {% for message in messages %}
