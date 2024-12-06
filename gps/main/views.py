@@ -444,52 +444,62 @@ class ValidateItemEntryView(View):
 
         return render(request, self.template_name, {'form': form})
 
-class AuthenticateItemExitView(View):
-    template_name = 'authenticate_item_exit.html'
+
+class AuthenticateUniqueCodeView(View):
+    template_name = 'authenticate_item_code.html'
 
     def get(self, request):
-        """Handles GET requests to display the initial form."""
         form = ExitItemInitialForm()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        """Handles POST requests for item exit authentication."""
-        if 'unique_code' in request.POST:  # Step 1: Verify unique code
-            form = ExitItemInitialForm(request.POST)
-            if form.is_valid():
-                unique_code = form.cleaned_data['unique_code']
-                item = Item.objects.filter(unique_code=unique_code).first()
-
-                if not item:
-                    messages.error(request, "The entered unique code does not exist.")
-                else:
-                    # Load the PIN form if unique code exists
-                    pin_form = ExitItemPinForm()
-                    return render(request, self.template_name, {'pin_form': pin_form, 'unique_code': unique_code})
-
-        elif 'pin' in request.POST:  # Step 2: Verify PIN
-            pin_form = ExitItemPinForm(request.POST)
-            unique_code = request.POST.get('unique_code')
+        form = ExitItemInitialForm(request.POST)
+        if form.is_valid():
+            unique_code = form.cleaned_data['unique_code']
             item = Item.objects.filter(unique_code=unique_code).first()
 
-            if item and pin_form.is_valid():
-                pin = pin_form.cleaned_data['pin']
-                if check_password(pin, item.pin):
-                    # Log the exit
-                    ExitLog.objects.create(
-                        unique_code=unique_code,
-                    )
-                    messages.success(request, "Exit logged successfully.")
-                    return redirect('authenticate-item-exit')
-                else:
-                    messages.error(request, "Incorrect PIN. Please try again.")
+            if not item:
+                messages.error(request, "The entered unique code does not exist.")
             else:
-                messages.error(request, "Invalid operation. Please try again.")
+                request.session['unique_code'] = unique_code  # Store in session
+                return redirect('authenticate-item-pin')  # Redirect to PIN verification page
 
-        # Display the initial form if no valid data
-        form = ExitItemInitialForm()
         return render(request, self.template_name, {'form': form})
-    
+
+
+class AuthenticatePinView(View):
+    template_name = 'authenticate_item_pin.html'
+
+    def get(self, request):
+        unique_code = request.session.get('unique_code')
+        if not unique_code:
+            messages.error(request, "Please enter the unique code first.")
+            return redirect('authenticate-item-code')
+
+        form = ExitItemPinForm()
+        return render(request, self.template_name, {'form': form, 'unique_code': unique_code})
+
+    def post(self, request):
+        unique_code = request.session.get('unique_code')
+        if not unique_code:
+            messages.error(request, "Session expired. Please start again.")
+            return redirect('authenticate-item-code')
+
+        form = ExitItemPinForm(request.POST)
+        item = Item.objects.filter(unique_code=unique_code).first()
+
+        if item and form.is_valid():
+            pin = form.cleaned_data['pin']
+            if check_password(pin, item.pin):
+                ExitLog.objects.create(unique_code=unique_code)
+                messages.success(request, "Exit logged successfully.")
+                del request.session['unique_code']  # Clear session after success
+                return redirect('authenticate-item-code')
+            else:
+                messages.error(request, "Incorrect PIN. Please try again.")
+
+        return render(request, self.template_name, {'form': form, 'unique_code': unique_code})
+
 @method_decorator(csrf_protect, name='dispatch')
 class ModifyPinView(View):
     template_name = 'modify_pin.html'

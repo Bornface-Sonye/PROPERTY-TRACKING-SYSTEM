@@ -2,101 +2,102 @@
 
 {% block content %}
 <style>
-    /* Sidebar styling */
-    .sidebar-card {
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 15px;
+    /* General Styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 24px;
+        color: #555;
         margin-bottom: 20px;
     }
 
-    .sidebar-header {
-        font-size: 1.2rem;
+    /* Message Styling */
+    .message-box {
+        border-radius: 8px;
+        padding: 15px;
+        margin: 15px auto;
+        text-align: center;
+        width: 50%;
+        font-size: 16px;
         font-weight: bold;
-        color: #343a40;
-        margin-bottom: 10px;
     }
 
-    .stat-item {
-        font-size: 1rem;
-        color: #555;
-        margin-bottom: 8px;
-        font-weight: 500;
+    .message-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
     }
 
-    /* Main content styling */
-    h1 {
-        text-align: center;
-        font-family: Arial, sans-serif;
-        color: #343a40;
+    .message-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
     }
 
-    p {
-        font-size: 1rem;
-        font-family: 'Courier New', Courier, monospace;
-        text-align: center;
-    }
-
-    .card-header {
-        background-color: #343a40;
-        color: white;
-        text-align: center;
-        font-weight: bold;
-        padding: 10px;
-        font-family: Verdana, sans-serif;
-    }
-
-    .card-footer {
-        background-color: #f8f9fa;
-        font-size: 0.9rem;
-        text-align: center;
-        padding: 10px;
-        font-family: 'Times New Roman', Times, serif;
-    }
-
-    .list-group-item {
-        border-radius: 5px;
-        margin-bottom: 10px;
-        padding: 10px;
-        font-family: Georgia, serif;
-        background-color: #e9ecef;
-        color: #343a40;
-    }
-
+    /* Form Styling */
     form {
         width: 50%;
         margin: 0 auto;
-        background-color: #f1f1f1;
+        background-color: #fff;
         padding: 20px;
         border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    button {
+    form input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    form input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    form button {
         background-color: #007bff;
-        color: white;
-        padding: 10px 15px;
-        font-size: 1rem;
+        color: #fff;
+        font-size: 16px;
+        padding: 10px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 
-    button:hover {
+    form button:hover {
         background-color: #0056b3;
     }
 </style>
+
 <div>
     <h1>Validate Item Entry</h1>
+
     {% for message in messages %}
-        <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-weight: bold;">
+        <div class="message-box {% if message.tags == 'success' %}message-success{% else %}message-error{% endif %}">
             {{ message }}
-        </p>
+        </div>
     {% endfor %}
+
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+            <input type="{{ field.widget.input_type|default:'text' }}" 
+                   name="{{ field.name }}" 
+                   placeholder="{{ field.label }}" 
+                   value="{{ field.value|default:'' }}">
+        {% endfor %}
         <button type="submit">Validate and Log Entry</button>
     </form>
 </div>

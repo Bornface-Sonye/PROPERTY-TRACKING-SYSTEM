@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     SignUpView, LoginView, User_SignUpView, User_LoginView, LogoutView, User_LogoutView, DashboardView, User_DashboardView,
     Register_LaptopView, Register_VehicleView, SetItemPinView, ModifyPinView, ValidateItemEntryView, 
-    AuthenticateItemExitView, ItemReportView, LogSearchView, ResetPasswordView, ResetPasswordConfirmView
+    AuthenticateUniqueCodeView, AuthenticatePinView, ItemReportView, LogSearchView, ResetPasswordView, 
+    ResetPasswordConfirmView
 )
                    
 
@@ -27,7 +28,9 @@ urlpatterns = [
     path('modify/pin/', ModifyPinView.as_view(), name='modify-pin'),
     
     path('validate/item/entry/', ValidateItemEntryView.as_view(), name='validate-item-entry'),
-    path('authenticate/item/exit/', AuthenticateItemExitView.as_view(), name='authenticate-item-exit'),
+    
+    path('authenticate/item/exit/code/', AuthenticateUniqueCodeView.as_view(), name='authenticate-item-code'),
+    path('authenticate/item/exit/pin/', AuthenticatePinView.as_view(), name='authenticate-item-pin'),
     
     path("item/report/", ItemReportView.as_view(), name="item-report"),
     
@@ -37,3 +40,4 @@ urlpatterns = [
     path('reset-password/<str:token>/', ResetPasswordConfirmView.as_view(), name='reset-password-confirm'),
     
 ]
+
