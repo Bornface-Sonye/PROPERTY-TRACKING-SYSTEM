@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 
 from django.contrib import messages
 import uuid
+from django.utils.crypto import get_random_string
 from django.utils import timezone
 from datetime import timedelta
 from datetime import datetime
