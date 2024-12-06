@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <div>
-                            <form method="post" action="{% url 'signup' %}" id="registration">
+                            <form method="post" action="{% url 'user-signup' %}" id="registration">
                                 {% csrf_token %}
                                 {% if form.errors %}
                                 <div class="alert alert-danger" role="alert">

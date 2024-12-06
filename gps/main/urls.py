@@ -17,7 +17,7 @@ urlpatterns = [
     
     path('user/logout/', User_LogoutView.as_view(), name='user-logout'),
     
-    #path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('user/dashboard', User_DashboardView.as_view(), name='user-dashboard'),
     
     path('register/laptop/', Register_LaptopView.as_view(), name='register-laptop'),

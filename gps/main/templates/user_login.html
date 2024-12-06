@@ -44,7 +44,7 @@
 								</div>
 							</div>
 							<div>
-								<form method="post" action="{% url 'login' %}" id="login-form">
+								<form method="post" action="{% url 'user-login' %}" id="login-form">
 									{% csrf_token %}
 									{% if form.errors %}
 									<div class="alert alert-danger" role="alert">

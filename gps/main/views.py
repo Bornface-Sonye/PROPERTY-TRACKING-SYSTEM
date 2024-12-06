@@ -80,7 +80,7 @@ class LoginView(View):
             if user and user.check_password(password):
                 # Authentication successful
                 request.session['username'] = user.username  # Store username in session
-                return redirect(reverse('user-dashboard'))
+                return redirect(reverse('dashboard'))
             else:
                 # Authentication failed
                 error_message = 'Wrong Username or Password'
@@ -250,7 +250,7 @@ class User_DashboardView(View):
         # Prepare context
         context = {
             'admin_name': admin_last_name,
-            'last_name': owner_last_name,
+            'last_name': last_name,
             'laptops_total': laptops_total,
             'vehicle_total': vehicles_total,
             'entries': entries,
@@ -412,7 +412,7 @@ class SetItemPinView(View):
                 item, created = Item.objects.get_or_create(unique_code=unique_code)
                 item.set_pin(pin)
                 messages.success(request, "PIN set successfully.")
-                return redirect('set_item_pin')  # Redirect to the same page or another appropriate page
+                return redirect('set-item-pin')  # Redirect to the same page or another appropriate page
 
         return render(request, self.template_name, {'form': form})
 
