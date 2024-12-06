@@ -26,7 +26,8 @@ from .models import (
 
 from .forms import (
    SignUpForm, LoginForm, LaptopOwnerForm, VehicleOwnerForm, SetPinForm, ValidateEntryForm, ExitItemInitialForm, 
-   ExitItemPinForm, ModifyPinForm, ItemSearchForm, LogSearchForm, PasswordResetForm, ResetForm
+   ExitItemPinForm, ModifyPinForm, ItemSearchForm, LogSearchForm, PasswordResetForm, ResetForm, User_SignUpForm,
+   User_LoginForm
 )
 
 class SignUpView(View):
@@ -45,7 +46,7 @@ class SignUpView(View):
             
             if not Authorised_User.objects.filter(username=username).exists():
                 # Add error message to the form
-                form.add_error('username', "The username does not exist. Please register as a group first.")
+                form.add_error('username', "The username does not exist. Please register as an admin first.")
                 return render(request, self.template_name, {'form': form})
             
             # Check if username already exists in System_User model
@@ -79,7 +80,7 @@ class LoginView(View):
             if user and user.check_password(password):
                 # Authentication successful
                 request.session['username'] = user.username  # Store username in session
-                return redirect(reverse('dashboard'))
+                return redirect(reverse('user-dashboard'))
             else:
                 # Authentication failed
                 error_message = 'Wrong Username or Password'
@@ -92,11 +93,11 @@ class User_SignUpView(View):
     template_name = 'user_signup.html'
 
     def get(self, request):
-        form = SignUpForm()
+        form = User_SignUpForm()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        form = SignUpForm(request.POST)
+        form = User_SignUpForm(request.POST)
 
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -121,15 +122,16 @@ class User_SignUpView(View):
             # If the form is not valid, render the template with the form and errors
             return render(request, self.template_name, {'form': form})
         
+        
 class User_LoginView(View):
     template_name = 'user_login.html'
 
     def get(self, request):
-        form = LoginForm()
+        form = User_LoginForm()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        form = LoginForm(request.POST)
+        form = User_LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
@@ -151,6 +153,11 @@ class LogoutView(View):
     def get(self, request, *args, **kwargs):
         logout(request)  
         return redirect('login')
+    
+class User_LogoutView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)  
+        return redirect('user-login')
 
 class DashboardView(View):
     def get(self, request):
@@ -206,14 +213,22 @@ class User_DashboardView(View):
             user = System_User.objects.get(username=username)
         except System_User.DoesNotExist:
             return redirect('user-login')
-
-        # Owner Details
-        owner_last_name = user.last_name
-        owner_national_id = user.national_id_no  # Assuming this field exists in System_User
+        
+        # Fetch the last name of the user from the Owner table
+        try:
+            owner = Owner.objects.get(username=username)
+            last_name = owner.last_name
+            first_name = owner.first_name
+            national_id = owner.national_id_no  # Assuming this field exists in System_User
+        except Owner.DoesNotExist:
+            last_name = "Unknown"
+            first_name = "User"
+      
+        national_id_no = national_id
 
         # Laptop and Vehicle counts and details
-        laptops = Laptop.objects.filter(owner_national_id=owner_national_id)
-        vehicles = Vehicle.objects.filter(owner_national_id=owner_national_id)
+        laptops = Laptop.objects.filter(national_id_no=national_id_no)
+        vehicles = Vehicle.objects.filter(national_id_no=national_id_no)
 
         laptops_total = laptops.count()
         vehicles_total = vehicles.count()

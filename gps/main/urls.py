@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    SignUpView, LoginView, User_SignUpView, User_LoginView, LogoutView, DashboardView, User_DashboardView,
+    SignUpView, LoginView, User_SignUpView, User_LoginView, LogoutView, User_LogoutView, DashboardView, User_DashboardView,
     Register_LaptopView, Register_VehicleView, SetItemPinView, ModifyPinView, ValidateItemEntryView, 
     AuthenticateItemExitView, ItemReportView, LogSearchView, ResetPasswordView, ResetPasswordConfirmView
 )
@@ -15,7 +15,9 @@ urlpatterns = [
     
     path('logout/', LogoutView.as_view(), name='logout'),
     
-    path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('user/logout/', User_LogoutView.as_view(), name='user-logout'),
+    
+    #path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('user/dashboard', User_DashboardView.as_view(), name='user-dashboard'),
     
     path('register/laptop/', Register_LaptopView.as_view(), name='register-laptop'),
