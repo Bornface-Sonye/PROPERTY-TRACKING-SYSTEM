@@ -249,33 +249,30 @@ class PasswordResetForm(forms.Form):
         return username
     
  
-class ResetForm(forms.ModelForm):
-    confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control'})
+from django import forms
+from .models import System_User
+
+class ResetForm(forms.Form):  # Use forms.Form instead of ModelForm
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}),
+        label="Password"
     )
-    
-    class Meta:
-        model = System_User
-        fields = ['password_hash']
-        labels = {
-            'password_hash': 'Password',
-            'confirm_password': 'Confirm Password',
-        }
-        widgets = {
-            'password_hash': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
-        }
-    
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control'}),
+        label="Confirm Password"
+    )
+
     def clean(self):
         cleaned_data = super().clean()
-        password = cleaned_data.get("password_hash")
+        password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
 
         if password != confirm_password:
-            raise forms.ValidationError("Password and confirm password do not match")
+            raise forms.ValidationError("Password and confirm password do not match.")
 
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.set_password(self.cleaned_data["password_hash"])
+    def save(self, user, commit=True):
+        # Use user object and set password
+        user.set_password(self.cleaned_data["password"])  # Hash password and set it
         if commit:
-            instance.save()
-        return instance    
+            user.save()
+        return user

@@ -37,7 +37,7 @@ urlpatterns = [
     path('log/', LogSearchView.as_view(), name='log-search'),
     
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
-    path('reset-password/<str:token>/', ResetPasswordConfirmView.as_view(), name='reset-password-confirm'),
+    path('reset-password/<str:token>/', ResetPasswordConfirmView.as_view(), name='reset-password'),
     
 ]
 

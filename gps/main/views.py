@@ -7,9 +7,27 @@ from django.contrib.auth import logout  # Import the logout function
 from django.views.generic import UpdateView, DeleteView, ListView, TemplateView, FormView
 from django.shortcuts import get_object_or_404
 
+#Email Imports
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
+from django.conf import settings
+
+from django.utils.crypto import get_random_string
+from django.shortcuts import render
+from django.core.mail import send_mail
+from django.conf import settings
+from django.views import View
+from .models import System_User, PasswordResetToken
+from .forms import PasswordResetForm
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+from .forms import ResetForm
+from .models import PasswordResetToken, System_User
+from django.contrib import messages
+
 from django.contrib import messages
 import uuid
-from django.utils.crypto import get_random_string
 from django.utils import timezone
 from datetime import timedelta
 from datetime import datetime
@@ -649,11 +667,10 @@ class LogSearchView(View):
                 return generate_pdf(unique_code, entry_logs, exit_logs)
 
         return render(request, self.template_name, context)
-    
+
 class ResetPasswordView(View):
     template_name = 'reset_password.html'
     form_class = PasswordResetForm
-    success_redirect_url = 'home'
 
     def get(self, request):
         form = self.form_class()
@@ -662,7 +679,7 @@ class ResetPasswordView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
+            username = form.cleaned_data['username']  # This is the email address
             user = System_User.objects.filter(username=username).first()
             if user:
                 try:
@@ -670,19 +687,18 @@ class ResetPasswordView(View):
                     token = get_random_string(length=32)
                     # Save the token to the database
                     PasswordResetToken.objects.create(username=user, token=token)
-                    # Generate the correct reset link
-                    
-                    email = System_User.objects.filter(username=user).first()
-                    reset_link = request.build_absolute_uri(f'/Linker/reset-password/{token}/')
+                    # Generate the reset link
+                    reset_link = request.build_absolute_uri(f'/reset-password/{token}/')
                     # Send password reset email
                     send_mail(
                         'Reset Your Password',
                         f'Click the link to reset your password: {reset_link}',
                         settings.EMAIL_HOST_USER,
-                        [email.email_address],
+                        [user.username],  # Use the username as the email address
                         fail_silently=False,
                     )
-                    return redirect(self.success_redirect_url)
+                    success_message = "A password reset link has been sent to the provided email address."
+                    return render(request, self.template_name, {'form': form, 'success_message': success_message})
                 except Exception as e:
                     error_message = f"An error occurred: {str(e)} or Email Address does not exist in our records"
                     return render(request, self.template_name, {'form': form, 'error_message': error_message})
@@ -693,53 +709,45 @@ class ResetPasswordView(View):
         return render(request, self.template_name, {'form': form})
 
 
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.views import View
+from .models import System_User, PasswordResetToken
+from .forms import ResetForm
+
 class ResetPasswordConfirmView(View):
     template_name = 'reset_password_confirm.html'
-    form_class = ResetForm
-
+    
     def get(self, request, token):
-        # Check if the token exists in the database
+        form = ResetForm()
         password_reset_token = PasswordResetToken.objects.filter(token=token).first()
+        
         if not password_reset_token or password_reset_token.is_expired():
-            error_message = "Token is invalid or expired. Try resetting your password again."
-            return render(request, self.template_name, {'error_message': error_message})
+            error_message = "Token is invalid or expired."
+            return render(request, self.template_name, {'form': form, 'token': token, 'error_message': error_message})
 
-        # Initialize the form for GET requests
-        form = self.form_class()
-
-        # Render the form in the template
         return render(request, self.template_name, {'form': form, 'token': token})
 
     def post(self, request, token):
-        # Check if the token exists in the database
+        form = ResetForm(request.POST)
         password_reset_token = PasswordResetToken.objects.filter(token=token).first()
+
         if not password_reset_token or password_reset_token.is_expired():
-            error_message = "Token is invalid or expired. Try resetting your password again."
-            return render(request, self.template_name, {'error_message': error_message})
+            error_message = "Token is invalid or expired."
+            return render(request, self.template_name, {'form': form, 'token': token, 'error_message': error_message})
 
-        # Process the form submission
-        form = self.form_class(request.POST)
         if form.is_valid():
-            password_hash = form.cleaned_data['password_hash']
-            reset = get_object_or_404(PasswordResetToken, token=password_reset_token)
-            user = get_object_or_404(System_User, username=reset.username)
-            
-            # Delete the user (if this is the desired behavior)
-            user.delete()
-            
-            # Create the new account
-            account = form.save(commit=False)
-            account.username = reset.username
-            account.set_password(password_hash)
-            account.save()
+            # Get user related to the token
+            user = get_object_or_404(System_User, username=password_reset_token.username)
+            form.save(user)  # Save the password to the user
 
-            # Delete the token
+            # Delete the token for security
             password_reset_token.delete()
 
-            # Redirect to the login page
-            return redirect('login')
-
-        # Render the form again with errors if invalid
-        return render(request, self.template_name, {'form': form, 'token': token, 'error_message': "Invalid form submission. Please check your input."})
-
-
+            # Success message
+            messages.success(request, "Your password has been reset successfully.")
+            return render(request, self.template_name, {'form': form, 'token': token})
+        
+        # If form is not valid, show errors
+        return render(request, self.template_name, {'form': form, 'token': token, 'error_message': "Invalid form submission."})
